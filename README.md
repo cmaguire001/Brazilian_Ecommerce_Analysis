@@ -63,9 +63,21 @@ FROM payments;
 * Aggregations with `COUNT`, `SUM`, `GROUP BY`
 * Calculating business metrics like AOV
 * Translating business questions into queries
-
 ---
+## Key Insights from Brazilian E-Commerce Analysis
 
+*Customer Base & Orders
+  There are tens of thousands of customers, with multiple orders per customer in some cases.
+  A significant portion of customers place only one order, indicating a potential for improving retention and repeat purchases.
+*Average Order Value (AOV)
+  The overall AOV is approximately 160.99 BRL.
+  Most orders fall within a similar range, showing consistent purchasing behavior.
+*Payments Analysis
+  Multiple payment methods are used, with some orders using split payments.
+  The sum of payments aligns with total orders, indicating that most payments are captured correctly.
+*Order Frequency
+  Repeat customers exist but are relatively low compared to first-time buyers.
+  Highlighting opportunities for customer engagement strategies to increase repeat purchases.
 ## Repository Structure
 
 ```
