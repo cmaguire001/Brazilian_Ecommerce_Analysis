@@ -68,8 +68,8 @@ FROM payments;
 
   * Customer Base & Orders
     
-       There are tens of thousands of customers, with multiple orders per customer in some cases.
-        A significant portion of customers place only one order, indicating a potential for improving retention and repeat purchases.
+  There are tens of thousands of customers, with multiple orders per customer in some cases.
+  A significant portion of customers place only one order, indicating a potential for improving retention and repeat purchases.
   * Average Order Value (AOV)
     
   The overall AOV is approximately 160.99 BRL.
