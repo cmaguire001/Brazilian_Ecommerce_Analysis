@@ -83,12 +83,12 @@ FROM payments;
   Repeat customers exist but are relatively low compared to first-time buyers.
   Highlighting opportunities for customer engagement strategies to increase repeat purchases.
 
-*PROJECT EXTENSION 
+## PROJECT EXTENSION 
 Olist Brazilian E-commerce Customer Heat Map 
 
 This project visualizes customer distribution across Brazil using Olist’s customer and geolocation datasets. The goal is to create an interactive heat map / bubble map showing where the most customers are located, while efficiently handling large, high-cardinality data in Tableau Public.
 
-🔹 Project Overview
+## Project Overview
 
 Datasets used:
 
@@ -97,16 +97,15 @@ olist_customers_dataset.csv
 olist_geolocation_dataset.csv
 
 
-Objective:
+## Objective:
 Visualize the concentration of customers by city across Brazil, highlighting the largest customer bases while keeping the visualization performant.
 
-Tools:
+## Tools:
 
 Tableau Pubic 
 
----
 
-🔹 Steps to Build the Heat Map
+## Steps to Build the Heat Map
 
 1. Load and Relate the Data
 
@@ -165,7 +164,7 @@ Optional: created color gradients to represent customer density visually.
 
 ---
 
-🔹 Key Learnings / Takeaways
+## Key Learnings / Takeaways
 
 High-cardinality geospatial data can easily exceed Tableau Public memory limits.
 
@@ -177,7 +176,7 @@ Tableau Public’s geography engine is optimized when using generated Lat/Lng ra
 
 ---
 
-🔹 Screenshot of Map in images.
+## Screenshot of Map in images.
 
 link to tableau public
    https://public.tableau.com/shared/7RBSX3Y69?:display_count=n&:origin=viz_share_link
