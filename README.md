@@ -82,6 +82,106 @@ FROM payments;
     
   Repeat customers exist but are relatively low compared to first-time buyers.
   Highlighting opportunities for customer engagement strategies to increase repeat purchases.
+
+*PROJECT EXTENSION 
+Olist Brazilian E-commerce Customer Heat Map 
+
+This project visualizes customer distribution across Brazil using Olist’s customer and geolocation datasets. The goal is to create an interactive heat map / bubble map showing where the most customers are located, while efficiently handling large, high-cardinality data in Tableau Public.
+
+🔹 Project Overview
+
+Datasets used:
+
+olist_customers_dataset.csv
+
+olist_geolocation_dataset.csv
+
+
+Objective:
+Visualize the concentration of customers by city across Brazil, highlighting the largest customer bases while keeping the visualization performant.
+
+Tools:
+
+Tableau Pubic 
+
+---
+
+🔹 Steps to Build the Heat Map
+
+1. Load and Relate the Data
+
+Created a relationship between the customers and geolocations tables using customer_id.
+
+Avoided joins at the raw row level to prevent Tableau from exploding the number of rows.
+
+
+2. Use Generated Latitude and Longitude
+
+Used Tableau’s generated Lat/Lng fields for mapping instead of raw CSV columns.
+
+This ensures compatibility with Tableau’s optimized geography engine.
+
+
+3. Aggregate Customers per City
+
+Created a calculated field for number of customers per city:
+
+COUNT([customer_unique_id])
+
+Avoided COUNTD or LODs for filtering to prevent memory errors.
+
+
+4. Filter and Limit Data
+
+Applied Top N city filter:
+
+Dragged customer_city → Filters → Top → By field → Top 200 by COUNT(customer_unique_id).
+
+
+Optional: added customer_state as a context filter to further reduce memory usage.
+
+
+5. Build the Map
+
+Rows: Longitude (generated)
+
+Columns: Latitude (generated)
+
+Marks (Circle):
+
+Size → COUNT([customer_unique_id])
+
+Color → COUNT([customer_unique_id])
+
+Detail → customer_city
+
+7. Final Optimizations
+
+Removed unnecessary customer_city from Detail for memory efficiency.
+
+Verified bubble sizes matched customer counts.
+
+Optional: created color gradients to represent customer density visually.
+
+---
+
+🔹 Key Learnings / Takeaways
+
+High-cardinality geospatial data can easily exceed Tableau Public memory limits.
+
+Use Top N filters, context filters, and aggregates at the city level to optimize performance.
+
+Table calculations are ideal for conditional labels without increasing memory footprint.
+
+Tableau Public’s geography engine is optimized when using generated Lat/Lng rather than raw CSV columns.
+
+---
+
+🔹 Screenshot of Map in images.
+
+link to tableau public
+   https://public.tableau.com/shared/7RBSX3Y69?:display_count=n&:origin=viz_share_link
+  
 ## Repository Structure
 
 ```
