@@ -1,0 +1,303 @@
+!unzip -o /content/drive/MyDrive/archive.zip -d /content/data
+
+import pandas as pd
+import sqlite3
+
+# Load CSVs
+orders = pd.read_csv('/content/olist_orders_dataset.csv')
+customers = pd.read_csv('/content/olist_customers_dataset.csv')
+payments = pd.read_csv('/content/olist_order_payments_dataset.csv')
+order_items = pd.read_csv('/content/olist_order_items_dataset.csv')
+products = pd.read_csv('/content/olist_products_dataset.csv')
+reviews= pd.read_csv('/content/olist_order_reviews_dataset.csv')
+# Create database
+conn = sqlite3.connect(':memory:')
+
+# Create SQL tables
+orders.to_sql('orders', conn, index=False)
+customers.to_sql('customers', conn, index=False)
+payments.to_sql('payments', conn, index=False)
+order_items.to_sql('order_items', conn, index=False)
+products.to_sql('products', conn, index=False)
+reviews.to_sql('reviews', conn, index=False)
+
+print("✅ Setup complete!")
+
+# ===== SECTION 2: Start of ANALYSIS
+
+# Question 1: Total revenue
+query = """
+SELECT sum(payment_value) as 'Total revenue'
+from payments;
+
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+# questions 2:how many orders placed each month
+
+query= """
+Select strftime('%Y-%m', order_purchase_timestamp) as 'order month'
+, count(order_id) as 'orders per month'
+From Orders
+Group by strftime('%Y-%m', order_purchase_timestamp);
+
+
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+# Q3 finding the average order value
+query="""
+Select sum(payment_value)/ count (distinct order_id) as 'AOV'
+From Payments;
+
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+# Q4 what are the top five months for revenue?
+
+query="""
+Select strftime('%Y-%m', order_purchase_timestamp) as 'order month',
+sum(payment_value) as 'total revenue'
+From Orders
+join payments on orders.order_id=payments.order_id
+group  by strftime('%Y-%m', order_purchase_timestamp)
+order by sum(payment_value) desc
+limit 5;
+
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+# Q5 How many unique customers made purchases?
+query="""
+select count( distinct customer_unique_id) as 'unique customers'
+from customers
+
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+#Q6 how many orders per customer?
+
+query="""
+Select count(order_status)*1.0/count(distinct customer_unique_id) as 'OpC',
+count(order_status),
+count(distinct customer_unique_id)
+From customers
+Join orders on
+Customers.customer_id=orders.customer_id
+Where order_status= 'delivered'
+
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+# this cell confirms the number of delivered orders
+
+query="""
+select count(order_status)
+from orders
+Where order_status = 'delivered'
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+#q7 top 10 customers
+
+query= """
+SELECT customer_unique_id,
+Sum(payment_value) as 'total spend'
+From customers
+Join orders on
+Customers.customer_id=orders.customer_id
+Join payments on
+Orders.order_id=payments.order_id
+Where order_status= 'delivered'
+Group by customer_unique_id
+Order by sum(payment_value) desc
+
+Limit 10
+
+
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+#Q8 top ten cities by customer size
+
+
+query= """
+SELECT customer_city,
+count(customer_city) as' # of customers'
+From customers
+Group by customer_city
+Order by count(customer_city) desc
+Limit 10
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+#q9 what product types make the most revenue
+
+query= """
+
+Select product_category_name, sum(payment_value) as revenue
+FROM order_items
+Join products
+On Order_items.product_id=products.product_id
+Join payments
+On order_items.order_id=payments.order_id
+
+Group by product_category_name
+Order by sum(payment_value) desc
+Limit 15;
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+#q10 top ten items ordered, Products are anonymous in this data
+
+query= """
+
+Select product_id, count(product_id) as 'total'
+FROM order_items
+Group by product_id
+Order by count(product_id) desc
+Limit 10
+"""
+
+result = pd.read_sql(query, conn)
+print(result)
+
+#Q11: Which Products have the highest average ratings?
+
+query= """
+SELECT avg(review_score) as average_rating, product_id
+from Reviews
+join order_items on
+reviews.order_id=order_items.order_id
+group by product_id
+HAVING COUNT(*) > 14
+order by avg(review_score) desc
+limit 10
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+#Q12: Most popular payment methods
+query = """
+SELECT payment_type, count(payment_type) as 'total'
+from payments
+group by payment_type
+order by count(payment_type) desc
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+#Q13: Average number of payment installments
+
+query = """
+Select  avg(payment_installments) as 'Avg installments'
+from payments
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+
+#Q14: Average delivery time
+query = """
+SELECT
+AVG(julianday(order_delivered_customer_date) - julianday(order_purchase_timestamp)) AS avg_delivery_time
+from orders
+where order_status = 'delivered'
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+ #Q15 Relationship between payment installments and order value
+
+query = """
+SELECT payment_installments, AVG(payment_value)
+FROM payments
+GROUP BY payment_installments
+ORDER BY payment_installments
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+
+# calculate revenue from payments so every order_id has one revenue value.
+query = """
+WITH order_revenue AS (
+    SELECT
+        order_id,
+        SUM(payment_value) AS order_revenue
+    FROM payments
+    GROUP BY order_id
+)
+SELECT *
+FROM order_revenue;
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+
+# Create and find repeat customers (using customer_unique_id)
+
+query = """
+WITH customer_order_counts AS (
+    SELECT
+        c.customer_unique_id,
+        COUNT(o.order_id) AS order_count
+    FROM customers c
+    JOIN orders o ON c.customer_id = o.customer_id
+    GROUP BY c.customer_unique_id
+)
+, repeat_customers AS (
+    SELECT
+        customer_unique_id,
+        CASE
+            WHEN order_count > 1 THEN TRUE
+            ELSE FALSE
+        END AS is_repeat_customer
+    FROM customer_order_counts
+)
+SELECT *
+FROM repeat_customers
+ORDER BY is_repeat_customer DESC; -- Added ORDER BY clause
+"""
+result = pd.read_sql(query, conn)
+print(result)
+
+
+# Assemble the final one-row-per-order table
+
+query = """
+SELECT
+    o.order_id,
+    o.order_purchase_timestamp,
+    o.customer_id,
+    c.customer_state,
+    r.order_revenue,
+    rc.is_repeat_customer
+FROM orders o
+JOIN customers c
+    ON o.customer_id = c.customer_id
+JOIN order_revenue r
+    ON o.order_id = r.order_id
+JOIN repeat_customers rc
+    ON o.customer_id = rc.customer_id
+WHERE o.order_status = 'delivered';
+"""
+result = pd.read_sql(query, conn)
+print(result)
