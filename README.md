@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project analyzes the **Brazilian E-Commerce Public Dataset (Olist)** from Kaggle to explore customer behavior, orders, and payments. The analysis is performed in **Python (Pandas) and SQL** within a Jupyter Notebook/Google Colab environment. Gpt-prompted the questions and I wrote my own code, struggling through each line to learn as I go. 
+This project analyzes the **Brazilian E-Commerce Public Dataset (Olist)** from Kaggle to explore customer behavior, orders, and payments. The analysis is performed in **Python (Pandas) and SQL** within a Jupyter Notebook/Google Colab environment. Gpt-prompted the questions and I wrote my own SQL code, struggling through each line to learn as I go. 
 
 Kaggle dataset link: [Olist Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
@@ -86,7 +86,7 @@ FROM payments;
 ## PROJECT EXTENSION 
 Olist Brazilian E-commerce Customer Heat Map 
 
-This project visualizes customer distribution across Brazil using Olist’s customer and geolocation datasets. The goal is to create an interactive heat map / bubble map showing where the most customers are located, while efficiently handling large, high-cardinality data in Tableau Public.
+This project visualizes customer distribution across Brazil using Olist’s customer and geolocation datasets. The goal is to create an interactive heat map / bubble map showing where the most customers are located, while efficiently handling large, high-cardinality data in Tableau Public. I used Ai-Assitance to help guide me through this process.
 
 ## Project Overview
 
@@ -189,6 +189,20 @@ Brazilian_Ecommerce_Analysis/
 ├── Brazilian_Ecommerce_Analysis.ipynb
 ├── README.md
 ```
+## Project Extension part 2
+
+Google colab notebook keep crashing due to file storage issues.
+Colab does not save the kaggle CSVs permentanly so I had to keep uploading them.(very ineffective) 
+I asked GPT for a better method to run SQL and store the CSV and I discovered Codespaces within Github.
+I used GitHub Codespaces to write and run the code, saving all the CSVs I downloaded from Kaggle directly in my repository.
+
+First, I installed DuckDB in Python, which let me run SQL queries directly on the CSV files without needing a heavy database. I (Ai-assisted) wrote a script to load all the CSVs — including orders, customers, order items, and payments — into DuckDB tables. This made the data easier to work with and allowed me to check that all rows were loaded correctly.
+
+Next, I combined these tables into a single fact table called fct_orders. I calculated the total revenue for each order, brought in customer information, added payment details, and created a flag to identify repeat customers. This table became the foundation for all my analysis.
+
+Once the fact table was ready, I wrote scripts to generate key metrics for visualization. I exported monthly revenue, revenue from repeat vs new customers, and revenue by state into separate CSV files. These files were ready to be used in Tableau for creating dashboards.
+
+
 ## Author
 
 **Christopher Maguire**
