@@ -202,6 +202,59 @@ Next, I combined these tables into a single fact table called fct_orders. I calc
 
 Once the fact table was ready, I wrote scripts to generate key metrics for visualization. I exported monthly revenue, revenue from repeat vs new customers, and revenue by state into separate CSV files. These files were ready to be used in Tableau for creating dashboards.
 
+### Project extension Part 3 : Live dashboard Setup 
+
+Live Dashboard (PostgreSQL + Metabase)
+Overview
+
+This project demonstrates how to build a live analytics dashboard using a real database and SQL — without exporting CSV files.
+The dashboard updates automatically whenever the underlying data changes.
+
+Tools Used
+
+PostgreSQL (Neon, free tier) – stores the data
+
+Metabase (self-hosted via Docker) – dashboards and charts
+
+SQL – data aggregation and business logic
+
+All tools are free and open-source.
+
+The goal is to simulate how a junior analyst would support business reporting in a real company.
+
+How It Works (High Level)
+
+Data is stored in a PostgreSQL database
+
+SQL queries calculate metrics like totals and averages
+
+Metabase connects directly to the database
+
+Dashboards update live as data changes
+
+No manual exports or refreshes required.
+
+Why This Matters
+
+Uses production-style tools (Postgres + BI layer)
+
+Demonstrates real SQL skills (joins, grouping, filtering)
+
+Mirrors how analytics teams work in practice
+
+Skills Demonstrated
+
+Data modeling
+
+Building live dashboards
+
+Translating raw data into business insights
+
+Notes
+
+This project was built on a Chromebook using a Linux container and Docker, demonstrating a fully free and portable analytics setup.
+
+
 
 ## Author
 
