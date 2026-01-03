@@ -425,6 +425,9 @@ If you want to add specific data (not just automatic updates):
 
 The dashboard will reflect changes within 1-2 minutes, or refresh the page to see immediately.
 
+check out my live dashboard I built with sample data:   https://overapprehensively-unremissive-arlo.ngrok-free.dev/public/question/66068a45-6122-4c48-a727-52d463722c45      click visit site to enter
+follow the free and fragile pipeline  [Auto Script on home PC linux ] → [Neon PostgreSQL] → [Metabase (Docker)] → [ngrok] → [Live dashoard! ]
+
 ## Making It Permanent
 
 Current setup is free but requires:
