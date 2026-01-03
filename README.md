@@ -387,6 +387,68 @@ docker start metabase
 - Verify SSL is enabled in Metabase
 - Double-check connection string details
 
+# Auto-Updating Dashboard
+
+## What This Does
+
+Creates a live dashboard that automatically updates with new sales data every 5 minutes. Stakeholders can view it through a shared link without needing any software or accounts.
+
+## How It Works
+
+1. **Data Storage**: Sales data lives in a Neon cloud database
+2. **Visualization**: Metabase creates charts and graphs from the data
+3. **Auto-Updates**: A script adds new sales records every 5 minutes
+4. **Sharing**: ngrok creates a public link anyone can access
+
+## Accessing the Dashboard
+
+Share this link with stakeholders:
+```
+https://overapprehensively-unremissive-arlo.ngrok-free.dev/public/question/01c829d4-b98a-4d77-bd5b-3175990187d0
+```
+
+They can bookmark it and refresh anytime to see the latest data.
+
+## How to Keep It Running
+
+- **Keep the terminal with ngrok open** - closing it breaks the link
+- **Restart ngrok if needed** - if you restart, send the new link to stakeholders
+- The auto-update script runs in the background automatically
+
+## Adding Data Manually
+
+If you want to add specific data (not just automatic updates):
+
+1. Open terminal
+2. Connect to database: `psql 'your-connection-string'`
+3. Add records: `INSERT INTO sales (date, product, amount, region) VALUES ('2024-01-26', 'Widget A', 1500.00, 'North');`
+
+The dashboard will reflect changes within 1-2 minutes, or refresh the page to see immediately.
+
+## Making It Permanent
+
+Current setup is free but requires:
+- Keeping your computer on
+- Sending new links when ngrok restarts
+
+For a permanent solution, consider:
+- **Railway** ($5/month) - dashboard stays online 24/7 with permanent link
+- **ngrok paid** ($8/month) - keeps your current setup but with permanent link
+
+## Troubleshooting
+
+**Stakeholders can't access the link?**
+- Check if ngrok terminal is still open
+- Send them the current ngrok URL
+
+**Dashboard not updating?**
+- Refresh the page
+- Check if auto-update script is running: `./insert_sales.sh`
+
+**Need help?**
+- Contact: cmaguire001@gmail.com
+
+
 
 Notes
 
