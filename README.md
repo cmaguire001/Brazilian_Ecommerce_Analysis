@@ -250,6 +250,144 @@ Building live dashboards
 
 Translating raw data into business insights
 
+# Metabase + Neon Database Setup
+
+A quick guide for setting up Metabase dashboards connected to a Neon PostgreSQL database on Chrome OS Linux.
+
+## What I Built
+
+- **Metabase** running in Docker for data visualization and dashboards
+- **Neon PostgreSQL** database for cloud-hosted data storage
+- **ngrok tunnel** to share dashboards publicly
+
+## Prerequisites
+
+- Chrome OS with Linux (Penguin) enabled
+- Docker installed
+- Neon account with a database created
+
+## Setup Steps
+
+### 1. Install Docker and PostgreSQL Client
+
+```bash
+sudo apt update
+sudo apt install docker.io postgresql-client -y
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+### 2. Fix Docker Permissions
+
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+sudo chmod 666 /var/run/docker.sock
+```
+
+### 3. Run Metabase
+
+```bash
+docker run -d -p 3000:3000 --name metabase metabase/metabase
+```
+
+Access locally at: `http://penguin.linux.test:3000`
+
+### 4. Connect to Neon Database
+
+Get your connection string from Neon Console, which looks like:
+```
+postgresql://username:password@host.neon.tech/dbname?sslmode=require
+```
+
+In Metabase setup, configure PostgreSQL connection with:
+- **Host**: Your Neon endpoint (e.g., `ep-xxx.us-east-2.aws.neon.tech`)
+- **Port**: `5432`
+- **Database**: Your database name
+- **Username**: From connection string
+- **Password**: From connection string
+- **SSL**: Enabled
+
+### 5. Add Sample Data
+
+Connect via psql:
+```bash
+psql 'your-neon-connection-string-here'
+```
+
+Create a test table:
+```sql
+CREATE TABLE sales (
+    id SERIAL PRIMARY KEY,
+    date DATE,
+    product VARCHAR(100),
+    amount DECIMAL(10,2),
+    region VARCHAR(50)
+);
+
+INSERT INTO sales (date, product, amount, region) VALUES
+('2024-01-15', 'Widget A', 1250.00, 'North'),
+('2024-01-16', 'Widget B', 890.50, 'South'),
+('2024-01-17', 'Widget A', 2100.00, 'East'),
+('2024-01-18', 'Widget C', 1500.75, 'West'),
+('2024-01-19', 'Widget B', 3200.00, 'North');
+```
+
+### 6. Share Dashboards Publicly with ngrok
+
+Install ngrok from https://ngrok.com and authenticate, then:
+
+```bash
+ngrok http 3000
+```
+
+Share the generated `https://` URL. Others can access your dashboard through this public link.
+
+## Usage
+
+- **Create dashboards**: Click "+ New" → "Question" in Metabase
+- **Share publicly**: Use the ngrok URL instead of localhost
+- **Keep ngrok running**: Don't close the terminal while sharing
+
+## Useful Commands
+
+```bash
+# Check running containers
+docker ps
+
+# View Metabase logs
+docker logs metabase
+
+# Stop Metabase
+docker stop metabase
+
+# Restart Metabase
+docker start metabase
+
+# Stop ngrok
+# Press Ctrl+C in the ngrok terminal
+```
+
+## Notes
+
+- ngrok URLs change on each restart (free plan)
+- Keep the ngrok terminal open while sharing
+- Docker permissions reset after Linux container restart (re-run `chmod` if needed)
+
+## Troubleshooting
+
+**Can't access Metabase?**
+- Use `penguin.linux.test:3000` instead of `localhost:3000`
+- Check if container is running: `docker ps`
+
+**Permission denied for Docker?**
+- Run: `sudo chmod 666 /var/run/docker.sock`
+
+**Neon connection fails?**
+- Verify SSL is enabled in Metabase
+- Double-check connection string details
+
+
 Notes
 
 This project was built on a Chromebook using a Linux container and Docker, demonstrating a fully free and portable analytics setup.
