@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project analyzes the **Brazilian E-Commerce Public Dataset (Olist)** from Kaggle to explore customer behavior, orders, and payments. The analysis is performed in **Python (Pandas) and SQL** within a Jupyter Notebook/Google Colab environment. Gpt-prompted the questions and I wrote my own SQL code, struggling through each line to learn as I go. 
+This project analyzes the **Brazilian E-Commerce Public Dataset (Olist)** from Kaggle to explore customer behavior, orders, and payments. The analysis is performed in **Python (Pandas) and SQL** within a Jupyter Notebook/Google Colab environment. In Phase 1 Ai helped prompt the questions and I wrote the SQL code, struggling through each line to learn as I go. 
 
 Kaggle dataset link: [Olist Brazilian E-Commerce Public Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
 
